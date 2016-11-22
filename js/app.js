@@ -1,17 +1,4 @@
-﻿function init(showContactForm, failureCount, mailSent) {
-
-    if (showContactForm == true) {
-        location.href = "#contact";
-    }
-
-    $('#show_popup').leanModal({ closeButton: ".modal-close" });
-
-    if (failureCount > 0 || mailSent == true) {
-        $('#show_popup').click();
-    }
-}
-
-$(function () {
+﻿$(function () {
     $('a[href*=#]:not([href=#])').click(function () {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
 
