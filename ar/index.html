@@ -1,261 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--
+Copyright 2021 The Immersive Web Community Group
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AR Window Replacement</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-      }
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+    <link rel="stylesheet" href="/ar/common.css" />
 
-      #startAR {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 12px 24px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 24px;
-        font-size: 16px;
-        cursor: pointer;
-        z-index: 100;
-      }
-
-      #status {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px 16px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        border-radius: 16px;
-        font-size: 14px;
-        z-index: 100;
-        display: none;
-      }
-
-      #instructions {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 8px;
-        text-align: center;
-        z-index: 50;
-      }
-
-      canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-    </style>
+    <title>Anchors</title>
   </head>
   <body>
-    <div id="instructions">
-      <h2>AR Window Replacement</h2>
-      <p>1. Allow camera access when prompted</p>
-      <p>2. Point your device at a window</p>
-      <p>3. Wait for surface detection</p>
-      <p>4. Tap to place the replacement image</p>
-    </div>
-    <div id="status">Initializing AR...</div>
-    <button id="startAR">Start AR Experience</button>
-
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
-        }
-      }
-    </script>
-
+    <header>
+      <details open>
+        <summary>Anchors</summary>
+        <p>
+          This sample demonstrates the use of anchors to place virtual objects
+          in stable, real-world locations.
+          <a class="back" href="./">Back</a>
+        </p>
+      </details>
+    </header>
     <script type="module">
-      import * as THREE from "three";
+      import { WebXRButton } from "/ar/js/util/webxr-button.js";
+      import { Scene } from "/ar/js/render/scenes/scene.js";
+      import {
+        Renderer,
+        createWebGLContext,
+      } from "/ar/js/render/core/renderer.js";
+      import { SkyboxNode } from "/ar/js/render/nodes/skybox.js";
+      import { InlineViewerHelper } from "/ar/js/util/inline-viewer-helper.js";
+      import { Gltf2Node } from "/ar/js/render/nodes/gltf2.js";
+      import { QueryArgs } from "/ar/js/util/query-args.js";
 
-      class ARWindowReplacer {
-        constructor() {
-          this.scene = new THREE.Scene();
-          this.camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-          );
-          this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true,
-          });
+      // If requested, use the polyfill to provide support for mobile devices
+      // and devices which only support WebVR.
+      import WebXRPolyfill from "/ar/js/third-party/webxr-polyfill/build/webxr-polyfill.module.js";
+      if (QueryArgs.getBool("usePolyfill", true)) {
+        let polyfill = new WebXRPolyfill();
+      }
 
-          this.renderer.xr.enabled = true;
-          this.detectedPlanes = new Map();
+      // XR globals.
+      let xrButton = null;
+      let xrImmersiveRefSpace = null;
+      let inlineViewerHelper = null;
 
-          this.init();
-        }
+      let isARAvailable = false;
+      let isVRAvailable = false;
+      let xrSessionString = "immersive-vr";
 
-        init() {
-          this.renderer.setSize(window.innerWidth, window.innerHeight);
-          this.renderer.setPixelRatio(window.devicePixelRatio);
-          document.body.appendChild(this.renderer.domElement);
+      // WebGL scene globals.
+      let gl = null;
+      let renderer = null;
+      let scene = new Scene();
+      //let solarSystem = new Gltf2Node({ url: "media/gltf/space/space.gltf" });
+      // The solar system is big (citation needed). Scale it down so that users
+      // can move around the planets more easily.
+      //solarSystem.scale = [0.1, 0.1, 0.1];
+      //scene.addNode(solarSystem);
+      // Still adding a skybox, but only for the benefit of the inline view.
+      //let skybox = new SkyboxNode({ url: "media/textures/milky-way-4k.png" });
+      // scene.addNode(skybox);
 
-          // Load the replacement image texture
-          const textureLoader = new THREE.TextureLoader();
-          this.replacementTexture = textureLoader.load(
-            "/api/placeholder/800/600",
-            (texture) => {
-              this.imageAspectRatio =
-                texture.image.width / texture.image.height;
-            }
-          );
+      const MAX_ANCHORED_OBJECTS = 30;
+      let anchoredObjects = [];
 
-          // Create reticle
-          const reticleGeometry = new THREE.RingGeometry(0.15, 0.2, 32);
-          const reticleMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-          });
-          this.reticle = new THREE.Mesh(reticleGeometry, reticleMaterial);
-          this.reticle.rotation.x = -Math.PI / 2;
-          this.reticle.visible = false;
-          this.scene.add(this.reticle);
+      // Set with all anchors tracked in a previous frame.
+      let all_previous_anchors = new Set();
 
-          // Add light
-          const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-          this.scene.add(ambientLight);
-        }
+      function initXR() {
+        xrButton = new WebXRButton({
+          onRequestSession: onRequestSession,
+          onEndSession: onEndSession,
+          textEnterXRTitle: isARAvailable ? "START AR" : "START VR",
+          textXRNotFoundTitle: isARAvailable ? "AR NOT FOUND" : "VR NOT FOUND",
+          textExitXRTitle: isARAvailable ? "EXIT  AR" : "EXIT  VR",
+        });
+        document.querySelector("header").appendChild(xrButton.domElement);
 
-        async startAR() {
-          try {
-            if (!navigator.xr) {
-              throw new Error("WebXR not supported");
-            }
-
-            // Check available features
-            const supported = await navigator.xr.isSessionSupported(
-              "immersive-ar"
-            );
+        if (navigator.xr) {
+          // Checks to ensure that 'immersive-ar' or 'immersive-vr' mode is available,
+          // and only enables the button if so.
+          navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
+            isARAvailable = supported;
+            xrButton.enabled = supported;
             if (!supported) {
-              throw new Error("AR not supported on this device");
-            }
-
-            // Request session with minimal required features
-            const session = await navigator.xr.requestSession("immersive-ar", {
-              optionalFeatures: ["hit-test", "plane-detection"],
-              requiredFeatures: ["local"],
-            });
-
-            session.addEventListener("select", this.onSelect.bind(this));
-
-            await this.renderer.xr.setSession(session);
-            this.renderer.setAnimationLoop(this.render.bind(this));
-
-            // Update UI
-            document.getElementById("instructions").style.display = "none";
-            document.getElementById("status").style.display = "block";
-            document.getElementById("startAR").style.display = "none";
-            document.getElementById("status").textContent =
-              "Looking for surfaces...";
-          } catch (error) {
-            console.error("AR Session Error:", error);
-            document.getElementById("status").style.display = "block";
-            document.getElementById("status").textContent =
-              "Error: " + error.message;
-          }
-        }
-
-        onSelect(event) {
-          if (this.reticle.visible) {
-            const imageGeometry = new THREE.PlaneGeometry(1, 1);
-            const imageMaterial = new THREE.MeshBasicMaterial({
-              map: this.replacementTexture,
-              transparent: true,
-              side: THREE.DoubleSide,
-            });
-
-            const imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-            imagePlane.position.copy(this.reticle.position);
-            imagePlane.rotation.copy(this.reticle.rotation);
-
-            // Default size if no plane detection
-            imagePlane.scale.set(1, 1 / this.imageAspectRatio, 1);
-
-            this.scene.add(imagePlane);
-            document.getElementById("status").textContent = "Image placed!";
-          }
-        }
-
-        render(timestamp, frame) {
-          if (frame) {
-            const referenceSpace = this.renderer.xr.getReferenceSpace();
-            const session = frame.session;
-
-            // Basic hit testing
-            if (session && referenceSpace) {
-              session
-                .requestHitTestSource({ space: referenceSpace })
-                .then((hitTestSource) => {
-                  const hitTestResults = frame.getHitTestResults(hitTestSource);
-                  if (hitTestResults.length) {
-                    const hit = hitTestResults[0];
-                    const pose = hit.getPose(referenceSpace);
-                    if (pose) {
-                      this.reticle.visible = true;
-                      this.reticle.position.set(
-                        pose.transform.position.x,
-                        pose.transform.position.y,
-                        pose.transform.position.z
-                      );
-                      document.getElementById("status").textContent =
-                        "Tap to place image";
-                    }
-                  } else {
-                    this.reticle.visible = false;
-                    document.getElementById("status").textContent =
-                      "Move to detect surfaces";
-                  }
+              navigator.xr
+                .isSessionSupported("immersive-vr")
+                .then((supported) => {
+                  isVRAvailable = supported;
+                  xrButton.enabled = supported;
                 });
+            } else {
+              xrSessionString = "immersive-ar";
             }
-          }
+          });
 
-          this.renderer.render(this.scene, this.camera);
+          navigator.xr.requestSession("inline").then(onSessionStarted);
         }
       }
 
-      // Initialize
-      const arWindowReplacer = new ARWindowReplacer();
+      function onRequestSession() {
+        // Requests an 'immersive-ar' or 'immersive-vr' session, depending on which is supported,
+        // and requests the 'anchors' module as a required feature.
+        return navigator.xr
+          .requestSession(xrSessionString, { requiredFeatures: ["anchors"] })
+          .then((session) => {
+            xrButton.setSession(session);
+            session.isImmersive = true;
+            onSessionStarted(session);
+          });
+      }
 
-      // Start button handler
-      document.getElementById("startAR").addEventListener("click", () => {
-        arWindowReplacer.startAR();
-      });
+      function initGL() {
+        if (gl) return;
 
-      // Initial check
-      window.addEventListener("load", async () => {
-        try {
-          if (!navigator.xr) {
-            throw new Error("WebXR not supported");
-          }
-          const supported = await navigator.xr.isSessionSupported(
-            "immersive-ar"
-          );
-          if (!supported) {
-            throw new Error("AR not supported");
-          }
-        } catch (error) {
-          document.getElementById("startAR").textContent = error.message;
-          document.getElementById("startAR").disabled = true;
+        gl = createWebGLContext({
+          xrCompatible: true,
+        });
+        document.body.appendChild(gl.canvas);
+
+        function onResize() {
+          gl.canvas.width = gl.canvas.clientWidth * window.devicePixelRatio;
+          gl.canvas.height = gl.canvas.clientHeight * window.devicePixelRatio;
         }
-      });
+        window.addEventListener("resize", onResize);
+        onResize();
+
+        renderer = new Renderer(gl);
+
+        scene.setRenderer(renderer);
+      }
+
+      function onSessionStarted(session) {
+        session.addEventListener("end", onSessionEnded);
+        session.addEventListener("select", onSelect);
+
+        if (session.isImmersive && isARAvailable) {
+          // When in 'immersive-ar' mode don't draw an opaque background because
+          // we want the real world to show through.
+          skybox.visible = false;
+        }
+
+        initGL();
+
+        // This and all future samples that visualize controllers will use this
+        // convenience method to listen for changes to the active XRInputSources
+        // and load the right meshes based on the profiles array.
+        scene.inputRenderer.useProfileControllerMeshes(session);
+
+        session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
+
+        let refSpaceType = session.isImmersive ? "local" : "viewer";
+        session.requestReferenceSpace(refSpaceType).then((refSpace) => {
+          if (session.isImmersive) {
+            xrImmersiveRefSpace = refSpace;
+          } else {
+            inlineViewerHelper = new InlineViewerHelper(gl.canvas, refSpace);
+          }
+          session.requestAnimationFrame(onXRFrame);
+        });
+      }
+
+      function onEndSession(session) {
+        session.end();
+      }
+
+      function onSessionEnded(event) {
+        if (event.session.isImmersive) {
+          xrButton.setSession(null);
+          // Turn the background back on when we go back to the inlive view.
+          skybox.visible = true;
+        }
+      }
+
+      function addAnchoredObjectToScene(anchor) {
+        console.debug("Anchor created");
+
+        anchor.context = {};
+
+        let flower = new Gltf2Node({
+          url: "/ar/sunflower.gltf",
+        });
+        scene.addNode(flower);
+        anchor.context.sceneObject = flower;
+        flower.anchor = anchor;
+        anchoredObjects.push(flower);
+
+        // For performance reasons if we add too many objects start
+        // removing the oldest ones to keep the scene complexity
+        // from growing too much.
+        if (anchoredObjects.length > MAX_ANCHORED_OBJECTS) {
+          let objectToRemove = anchoredObjects.shift();
+          scene.removeNode(objectToRemove);
+          objectToRemove.anchor.delete();
+        }
+      }
+
+      function onSelect(event) {
+        let frame = event.frame;
+        let session = frame.session;
+        let anchorPose = new XRRigidTransform();
+        let inputSource = event.inputSource;
+
+        // If the user is on a screen based device, place the anchor 1 meter in front of them.
+        // Otherwise place the anchor at the location of the input device
+        if (inputSource.targetRayMode == "screen") {
+          anchorPose = new XRRigidTransform(
+            { x: 0, y: 0, z: -1 },
+            { x: 0, y: 0, z: 0, w: 1 }
+          );
+        }
+
+        if (session.isImmersive) {
+          // Create a free-floating anchor.
+          frame.createAnchor(anchorPose, inputSource.targetRaySpace).then(
+            (anchor) => {
+              addAnchoredObjectToScene(anchor);
+            },
+            (error) => {
+              console.error("Could not create anchor: " + error);
+            }
+          );
+        }
+      }
+
+      // Called every time a XRSession requests that a new frame be drawn.
+      function onXRFrame(t, frame) {
+        let session = frame.session;
+        let xrRefSpace = session.isImmersive
+          ? xrImmersiveRefSpace
+          : inlineViewerHelper.referenceSpace;
+        let pose = frame.getViewerPose(xrRefSpace);
+
+        // Update the position of all the anchored objects based on the currently reported positions of their anchors
+        const tracked_anchors = frame.trackedAnchors;
+        if (tracked_anchors) {
+          all_previous_anchors.forEach((anchor) => {
+            if (!tracked_anchors.has(anchor)) {
+              scene.removeNode(anchor.sceneObject);
+            }
+          });
+
+          tracked_anchors.forEach((anchor) => {
+            const anchorPose = frame.getPose(anchor.anchorSpace, xrRefSpace);
+            if (anchorPose) {
+              anchor.context.sceneObject.matrix = anchorPose.transform.matrix;
+              anchor.context.sceneObject.visible = true;
+            } else {
+              anchor.context.sceneObject.visible = false;
+            }
+          });
+
+          all_previous_anchors = tracked_anchors;
+        } else {
+          all_previous_anchors.forEach((anchor) => {
+            scene.removeNode(anchor.sceneObject);
+          });
+
+          all_previous_anchors = new Set();
+        }
+
+        // In this sample and most samples after it we'll use a helper function
+        // to automatically add the right meshes for the session's input sources
+        // each frame. This also does simple hit detection to position the
+        // cursors correctly on the surface of selectable nodes.
+        scene.updateInputSources(frame, xrRefSpace);
+
+        scene.startFrame();
+
+        session.requestAnimationFrame(onXRFrame);
+
+        scene.drawXRFrame(frame, pose);
+
+        scene.endFrame();
+      }
+
+      // Start the XR application.
+      initXR();
     </script>
   </body>
 </html>
