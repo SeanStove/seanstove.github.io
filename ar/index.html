@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR Window Replacement</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      #startAR {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 24px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 100;
+      }
+
+      #status {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 16px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 16px;
+        font-size: 14px;
+        z-index: 100;
+        display: none;
+      }
+
+      #instructions {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        text-align: center;
+        z-index: 50;
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="instructions">
+      <h2>AR Window Replacement</h2>
+      <p>1. Allow camera access when prompted</p>
+      <p>2. Point your device at a window</p>
+      <p>3. Wait for plane detection</p>
+      <p>4. Tap to place the replacement image</p>
+    </div>
+    <div id="status">Detecting planes...</div>
+    <button id="startAR">Start AR Experience</button>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+
+      class ARWindowReplacer {
+        constructor() {
+          this.scene = new THREE.Scene();
+          this.camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+          );
+          this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+          });
+
+          // XR setup
+          this.renderer.xr.enabled = true;
+
+          // Detected planes storage
+          this.detectedPlanes = new Map();
+          this.replacementImage = null;
+
+          this.init();
+        }
+
+        init() {
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+          this.renderer.setPixelRatio(window.devicePixelRatio);
+          document.body.appendChild(this.renderer.domElement);
+
+          // Load the replacement image texture
+          const textureLoader = new THREE.TextureLoader();
+          this.replacementTexture = textureLoader.load(
+            "/api/placeholder/800/600",
+            (texture) => {
+              // Store aspect ratio for later use
+              this.imageAspectRatio =
+                texture.image.width / texture.image.height;
+            }
+          );
+
+          // Create reticle for targeting
+          const reticleGeometry = new THREE.RingGeometry(0.15, 0.2, 32);
+          const reticleMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+          });
+          this.reticle = new THREE.Mesh(reticleGeometry, reticleMaterial);
+          this.reticle.rotation.x = -Math.PI / 2;
+          this.reticle.visible = false;
+          this.scene.add(this.reticle);
+
+          // Add lights
+          const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+          this.scene.add(ambientLight);
+        }
+
+        async startAR() {
+          try {
+            if (!navigator.xr) {
+              throw new Error("WebXR not supported");
+            }
+
+            const supported = await navigator.xr.isSessionSupported(
+              "immersive-ar"
+            );
+            if (!supported) {
+              throw new Error("AR not supported");
+            }
+
+            const session = await navigator.xr.requestSession("immersive-ar", {
+              requiredFeatures: ["hit-test", "plane-detection"],
+            });
+
+            session.addEventListener("select", this.onSelect.bind(this));
+
+            // Set up plane detection
+            session.updateWorldTrackingState({
+              planeDetectionState: { enabled: true },
+            });
+
+            await this.renderer.xr.setSession(session);
+            this.renderer.setAnimationLoop(this.render.bind(this));
+
+            // Hide instructions and show status
+            document.getElementById("instructions").style.display = "none";
+            document.getElementById("status").style.display = "block";
+            document.getElementById("startAR").style.display = "none";
+          } catch (error) {
+            console.error("Failed to start AR session:", error);
+            alert("Failed to start AR: " + error.message);
+          }
+        }
+
+        onSelect(event) {
+          if (this.reticle.visible) {
+            // Create image plane at reticle position
+            const imageGeometry = new THREE.PlaneGeometry(1, 1);
+            const imageMaterial = new THREE.MeshBasicMaterial({
+              map: this.replacementTexture,
+              transparent: true,
+              side: THREE.DoubleSide,
+            });
+
+            const imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+
+            // Position the image at reticle location
+            imagePlane.position.copy(this.reticle.position);
+            imagePlane.rotation.copy(this.reticle.rotation);
+
+            // Adjust scale based on detected plane size
+            const detectedPlane = this.findNearestPlane(this.reticle.position);
+            if (detectedPlane) {
+              const { width, height } = this.getPlaneSize(detectedPlane);
+              imagePlane.scale.set(width, height / this.imageAspectRatio, 1);
+            }
+
+            this.scene.add(imagePlane);
+            document.getElementById("status").textContent = "Image placed!";
+          }
+        }
+
+        findNearestPlane(position) {
+          let nearestPlane = null;
+          let minDistance = Infinity;
+
+          for (const [plane, planeMesh] of this.detectedPlanes) {
+            const distance = position.distanceTo(planeMesh.position);
+            if (distance < minDistance) {
+              minDistance = distance;
+              nearestPlane = plane;
+            }
+          }
+
+          return nearestPlane;
+        }
+
+        getPlaneSize(plane) {
+          const geometry = plane.geometry;
+          const size = new THREE.Vector3();
+          geometry.boundingBox.getSize(size);
+          return { width: size.x, height: size.y };
+        }
+
+        updateReticle(frame, referenceSpace) {
+          const session = frame.session;
+          const views = frame.getViewerPose(referenceSpace)?.views;
+
+          if (views && views.length > 0) {
+            const view = views[0];
+            const viewMatrix = new THREE.Matrix4().fromArray(
+              view.transform.matrix
+            );
+
+            // Ray for hit testing
+            const rayDir = new THREE.Vector3(0, 0, -1);
+            rayDir.applyMatrix4(viewMatrix);
+
+            const hitTestResults = frame.getHitTestResults(
+              session.requestHitTestSource({
+                space: referenceSpace,
+                offsetRay: new XRRay(view.transform.position, rayDir),
+              })
+            );
+
+            if (hitTestResults.length > 0) {
+              const hit = hitTestResults[0];
+              const pose = hit.getPose(referenceSpace);
+
+              this.reticle.visible = true;
+              this.reticle.position.set(
+                pose.transform.position.x,
+                pose.transform.position.y,
+                pose.transform.position.z
+              );
+              document.getElementById("status").textContent =
+                "Tap to place image";
+            } else {
+              this.reticle.visible = false;
+              document.getElementById("status").textContent =
+                "Move camera to detect surfaces";
+            }
+          }
+        }
+
+        processPlanes(frame, referenceSpace) {
+          const detectedPlanes = frame.detectedPlanes;
+
+          // Update or add new planes
+          for (const plane of detectedPlanes) {
+            if (!this.detectedPlanes.has(plane)) {
+              const planePose = frame.getPose(plane.planeSpace, referenceSpace);
+              if (planePose) {
+                // Create visual representation of detected plane
+                const geometry = new THREE.PlaneGeometry(1, 1);
+                const material = new THREE.MeshBasicMaterial({
+                  transparent: true,
+                  opacity: 0.3,
+                  side: THREE.DoubleSide,
+                });
+
+                const planeMesh = new THREE.Mesh(geometry, material);
+                planeMesh.position.set(
+                  planePose.transform.position.x,
+                  planePose.transform.position.y,
+                  planePose.transform.position.z
+                );
+
+                this.detectedPlanes.set(plane, planeMesh);
+                this.scene.add(planeMesh);
+              }
+            }
+          }
+        }
+
+        render(timestamp, frame) {
+          if (frame) {
+            const referenceSpace = this.renderer.xr.getReferenceSpace();
+
+            // Update plane detection
+            this.processPlanes(frame, referenceSpace);
+
+            // Update reticle position
+            this.updateReticle(frame, referenceSpace);
+          }
+
+          this.renderer.render(this.scene, this.camera);
+        }
+      }
+
+      // Initialize the AR experience
+      const arWindowReplacer = new ARWindowReplacer();
+
+      // Add button event listener
+      document.getElementById("startAR").addEventListener("click", () => {
+        arWindowReplacer.startAR();
+      });
+
+      // Check AR support on load
+      window.addEventListener("load", async () => {
+        if (!navigator.xr) {
+          document.getElementById("startAR").textContent =
+            "WebXR not supported";
+          document.getElementById("startAR").disabled = true;
+          return;
+        }
+
+        const supported = await navigator.xr.isSessionSupported("immersive-ar");
+        if (!supported) {
+          document.getElementById("startAR").textContent = "AR not supported";
+          document.getElementById("startAR").disabled = true;
+        }
+      });
+    </script>
+  </body>
+</html>
