@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>WebAR Simple Demo</title>
+  <title>WebAR Simple Demo - Module Version</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -10,45 +10,38 @@
 </head>
 <body>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/webxr/ARButton.js"></script>
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/loaders/GLTFLoader.js';
+  import { ARButton } from 'https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/webxr/ARButton.js';
 
-<script>
   let camera, scene, renderer, controller;
 
   init();
   animate();
 
   function init() {
-    // Setup scene
     scene = new THREE.Scene();
 
-    // Setup camera
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-    // Setup renderer
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);
 
-    // Add AR Button
     document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] }));
 
-    // Add light
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     light.position.set(0.5, 1, 0.25);
     scene.add(light);
 
-    // Load 3D Model
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     loader.load('https://modelviewer.dev/shared-assets/models/Astronaut.glb', function (gltf) {
-      gltf.scene.scale.set(0.5, 0.5, 0.5); // scale down if needed
+      gltf.scene.scale.set(0.5, 0.5, 0.5);
       scene.add(gltf.scene);
     });
 
-    // Controller for hit-testing
     controller = renderer.xr.getController(0);
     controller.addEventListener('select', onSelect);
     scene.add(controller);
@@ -57,8 +50,7 @@
   }
 
   function onSelect() {
-    console.log('Tapped on AR session');
-    // You can place objects dynamically here
+    console.log('Tapped during AR session');
   }
 
   function onWindowResize() {
@@ -68,11 +60,9 @@
   }
 
   function animate() {
-    renderer.setAnimationLoop(render);
-  }
-
-  function render() {
-    renderer.render(scene, camera);
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
   }
 </script>
 
