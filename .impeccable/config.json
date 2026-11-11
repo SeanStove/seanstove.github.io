@@ -1,0 +1,47 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-11T14:47:05.378Z",
+        "reason": "agent verified in render: sections have 56px+ block padding and 16-64px side gutters via .wrap; detector reads border-top/background without resolving clamp() padding"
+      },
+      {
+        "rule": "overused-font",
+        "value": "lato",
+        "createdAt": "2026-11-11T19:37:08.455Z",
+        "reason": "user confirmed 2026-11-11: keep Lato, the original site's font"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "lato",
+        "createdAt": "2026-11-11T19:37:09.000Z",
+        "reason": "user confirmed 2026-11-11: Lato is the documented brand font (DESIGN.md)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-11T19:39:08.711Z",
+        "reason": "agent verified: #000 only appears as mask-image alpha in the contact photo fade, not a rendered color"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "0.875rem",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-11T19:39:16.243Z",
+        "reason": "agent verified: nav size 0.875rem is documented in DESIGN.md Typography (Label) and Components (Links)"
+      }
+    ]
+  }
+}

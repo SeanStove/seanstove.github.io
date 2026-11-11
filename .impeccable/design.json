@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-11T20:45:00.000Z",
+  "title": "Design System: Sean Stove",
+  "extensions": {
+    "colorMeta": {
+      "teal": { "role": "primary", "displayName": "Brand Teal", "canonical": "#0e715f", "tonalRamp": ["#04211b", "#073a31", "#0a5a4b", "#0e715f", "#2f8f7d", "#62b2a3", "#a6d9cf", "#e4f4f0"] },
+      "teal-deep": { "role": "primary", "displayName": "Deep Teal", "canonical": "#0a5a4b", "tonalRamp": ["#031a15", "#062e27", "#08453a", "#0a5a4b", "#2a7a6b", "#5f9f93", "#a1cbc3", "#e2f0ed"] },
+      "teal-light": { "role": "secondary", "displayName": "Line Teal", "canonical": "#17ba9d", "tonalRamp": ["#063a31", "#0a5c4e", "#108770", "#17ba9d", "#45cbb3", "#7ad9c8", "#b4eade", "#e6f8f3"] },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "#ffffff", "tonalRamp": ["#1f2423", "#3a403f", "#5a605f", "#7d8382", "#a3a8a7", "#c7cbca", "#e6e8e8", "#ffffff"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#14211e", "tonalRamp": ["#0b1311", "#14211e", "#24342f", "#3a4b46", "#566661", "#7b8a86", "#adb8b5", "#e3e9e7"] },
+      "mint": { "role": "neutral", "displayName": "Mint", "canonical": "#dff7f1", "tonalRamp": ["#173a33", "#2c5b51", "#4f8577", "#7cae9f", "#a6d2c6", "#c4e8de", "#dff7f1", "#f3fcf9"] },
+      "mint-soft": { "role": "neutral", "displayName": "Soft Mint", "canonical": "#c4f0e5", "tonalRamp": ["#123b31", "#245c4f", "#418474", "#6aae9c", "#97d3c3", "#c4f0e5", "#dcf7f0", "#f1fcf9"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "HALLO, in the hero only; 900 uppercase, centered." },
+      "headline": { "displayName": "Headline", "purpose": "Section names OVER / SKILLS / CONTACT; 900 uppercase." },
+      "subline": { "displayName": "Subline", "purpose": "The hero question under HALLO; 300 uppercase, tracked 0.2em (0.12em at 640px and below)." },
+      "mail": { "displayName": "Mail", "purpose": "The email address in Contact; 900, white with a 2px underline." },
+      "title": { "displayName": "Title", "purpose": "Skill column headings; 900 uppercase, tracked 0.1em." },
+      "body": { "displayName": "Body", "purpose": "Reading prose in 560-640px columns; 1rem at 640px and below." },
+      "label": { "displayName": "Label", "purpose": "Buttons, nav (0.875rem) and the hero role line; 700 uppercase, tracked 0.1em." },
+      "small": { "displayName": "Small", "purpose": "Colophon strip." }
+    },
+    "duotone": [
+      { "name": "hero-ramp", "stops": ["#0a2c26", "#0c5e50", "#0e715f", "#17ba9d"], "positions": [0, 0.3, 0.62, 1], "asset": "img/hero-face.webp", "purpose": "Darker ramp for crops that carry white type. Baked into the raster from img/profile.JPG; levels 1st-99th pct; WebP q0.8." },
+      { "name": "contact-ramp", "stops": ["#14211e", "#0e715f", "#17ba9d", "#dff7f1"], "asset": "img/contact-face.webp", "purpose": "Full brand ramp, ink to mint, for crops that stand beside type. Contact crop: left half of the face as seen, cut off by the page's right edge like the 2015 original, source x0-1310 y1000-3000, 900x1374, levels 1st-99th pct, WebP q0.8. Baked into the raster; never a CSS filter." }
+    ],
+    "shadows": [],
+    "overlays": [
+      { "name": "hero-scrim", "value": "radial-gradient(ellipse 46% 52% at 50% 36%, rgba(8,40,34,0.62) 0%, rgba(8,40,34,0.38) 55%, rgba(8,40,34,0) 100%)", "purpose": "Deepens the hero photo only behind the type block; highlights stay bright elsewhere." },
+      { "name": "contact-mask", "value": "linear-gradient(to right, transparent 0%, #000 18%)", "purpose": "The contact half-face (object-position 100% 30%) sits at the image's right edge, cut off by the page edge; the 18% left fade dissolves the background and cheek side into deep teal #0a5a4b; becomes 'to bottom, transparent 0%, #000 35%' at 760px and below." }
+    ],
+    "cuts": [
+      { "name": "hero-fall", "value": "polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--cut)))", "line": "x1=0 y1=3 x2=100 y2=97, 16px below the cut", "purpose": "Hero bottom edge, falling left to right." },
+      { "name": "section-rise", "value": "polygon(0 var(--cut), 100% 0, 100% 100%, 0 100%)", "line": "x1=0 y1=97 x2=100 y2=3, 16px above the cut", "purpose": "Over to Skills and Skills to Contact, rising to the right." },
+      { "name": "edge-line", "value": "stroke #17ba9d, stroke-width 3, vector-effect non-scaling-stroke, svg height var(--cut), preserveAspectRatio none", "purpose": "The parallel line along every cut." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The single ease for all motion and CSS transitions ([0.16,1,0.3,1] in motion.dev)." },
+      { "name": "hero-sweep", "value": "clip-path flat -> hero-fall, 1.2s, delay 0.15s", "purpose": "Signature moment on load." },
+      { "name": "edge-draw", "value": "clip-path inset(0 100% 0 0) -> inset(0 0% 0 0), 1.1s", "purpose": "Lines unclip left to right; hero line at 0.35s delay, others once on entering view (rootMargin 0 0 -15% 0)." },
+      { "name": "hero-rise", "value": "opacity 0 -> 1, translateY(14px) -> 0, 0.8s, delay 0.1s + i*0.08s", "purpose": "Hero type stack rises in sequence." },
+      { "name": "state-transition", "value": "background-color, color 0.25s ease-out", "purpose": "Button hover fill." },
+      { "name": "fallback", "value": "html.motion set only without prefers-reduced-motion; removed after 2500ms failsafe", "purpose": "No JS or reduced motion shows the final state." }
+    ],
+    "breakpoints": [
+      { "name": "skills-2col", "value": "900px" },
+      { "name": "contact-stack", "value": "760px" },
+      { "name": "mobile", "value": "640px" },
+      { "name": "print", "value": "print" }
+    ]
+  },
+  "components": [
+    {
+      "name": "White Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline-white",
+      "description": "The CV call to action on teal fields (hero, contact).",
+      "html": "<div class=\"ds-on-teal\"><a class=\"ds-btn ds-btn-white\" href=\"#\">Download CV</a></div>",
+      "css": ".ds-on-teal { background: var(--teal, #0e715f); padding: 32px; } .ds-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border: 2px solid currentColor; border-radius: 0; font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: background-color 0.25s cubic-bezier(0.16,1,0.3,1), color 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-btn-white { color: var(--white, #ffffff); } .ds-btn-white:hover { background: var(--white, #ffffff); border-color: var(--white, #ffffff); color: var(--teal, #0e715f); } .ds-btn-white:focus-visible { outline: 2px solid var(--white, #ffffff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Teal Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline-teal",
+      "description": "The CV call to action on white (Over).",
+      "html": "<a class=\"ds-btn ds-btn-teal\" href=\"#\">Download CV</a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border: 2px solid currentColor; border-radius: 0; font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: background-color 0.25s cubic-bezier(0.16,1,0.3,1), color 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-btn-teal { color: var(--teal, #0e715f); } .ds-btn-teal:hover { background: var(--teal, #0e715f); border-color: var(--teal, #0e715f); color: var(--white, #ffffff); } .ds-btn-teal:focus-visible { outline: 2px solid var(--teal, #0e715f); outline-offset: 3px; }"
+    },
+    {
+      "name": "Top Bar Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "White bar, folded S monogram left, teal tracked caps right; visible at every width.",
+      "html": "<header class=\"ds-bar\"><a class=\"ds-mono\" href=\"#\" aria-label=\"Sean Stove\"><img src=\"img/logo.jpg\" width=\"40\" alt=\"\"></a><nav class=\"ds-nav\"><a href=\"#\">Over</a><a href=\"#\">Skills</a><a href=\"#\">Contact</a></nav></header>",
+      "css": ".ds-bar { display: flex; align-items: center; justify-content: space-between; min-height: 84px; padding: 0 clamp(16px, 5vw, 64px); background: var(--white, #ffffff); } .ds-mono { line-height: 0; } .ds-nav { display: flex; gap: clamp(20px, 5vw, 72px); font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; } .ds-nav a { color: var(--teal, #0e715f); text-decoration: none; } .ds-nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.4em; } .ds-nav a:focus-visible { outline: 2px solid var(--teal, #0e715f); outline-offset: 3px; }"
+    },
+    {
+      "name": "Diagonal Cut with Edge Line",
+      "kind": "custom",
+      "refersTo": "spacing.cut",
+      "description": "Signature: a teal field whose top edge rises to the right, with the light-teal 3px line 16px above the cut; the line draws left to right.",
+      "html": "<div class=\"ds-cut-wrap\"><svg class=\"ds-edge\" viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><line x1=\"0\" y1=\"97\" x2=\"100\" y2=\"3\"/></svg><section class=\"ds-cut\"><h2 class=\"ds-h2\">Skills</h2></section></div>",
+      "css": ".ds-cut-wrap { position: relative; padding-top: 24px; } .ds-edge { position: absolute; left: 0; top: 8px; width: 100%; height: clamp(56px, 10vw, 180px); overflow: visible; pointer-events: none; animation: ds-draw 1.1s cubic-bezier(0.16,1,0.3,1) both; } .ds-edge line { stroke: var(--teal-light, #17ba9d); stroke-width: 3; vector-effect: non-scaling-stroke; } .ds-cut { background: var(--teal, #0e715f); color: var(--white, #ffffff); clip-path: polygon(0 clamp(56px, 10vw, 180px), 100% 0, 100% 100%, 0 100%); padding: calc(clamp(56px, 10vw, 180px) + 32px) clamp(16px, 5vw, 64px) 64px; text-align: right; } .ds-h2 { margin: 0; font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: clamp(2.25rem, 4.6vw, 4.0625rem); font-weight: 900; line-height: 1; letter-spacing: 0.02em; text-transform: uppercase; } @keyframes ds-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-edge { animation: none; } }"
+    },
+    {
+      "name": "Skill Column",
+      "kind": "card",
+      "refersTo": "skill-icon",
+      "description": "Open column on the teal band (not a card): 72px outline-weight glyph, tracked title, lists, legacy items muted last.",
+      "html": "<div class=\"ds-band\"><div class=\"ds-skill\"><svg class=\"ds-icon\" viewBox=\"0 0 512 512\" aria-hidden=\"true\"><path transform=\"translate(256 256) scale(0.86) translate(-256 -256)\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"46\" stroke-linejoin=\"round\" d=\"M400 240c-8.89-89.54-71-144-144-144-69 0-113.44 48.2-128 96-60 6-112 43.59-112 112 0 66 54 112 120 112h260c55 0 100-27.44 100-88 0-59.82-53-85.76-96-88z\"/></svg><h3>Azure</h3><ul><li>App Service / Functions</li><li>Key Vault</li></ul><ul class=\"ds-legacy\"><li>IIS</li></ul></div></div>",
+      "css": ".ds-band { background: var(--teal, #0e715f); padding: 48px 24px; } .ds-skill { text-align: center; color: var(--white, #ffffff); font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: 1.0625rem; } .ds-icon { width: 72px; height: 72px; color: var(--white, #ffffff); } .ds-skill h3 { margin: 14px 0 12px; font-size: 1rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; } .ds-skill ul { margin: 0; padding: 0; list-style: none; line-height: 1.75; } .ds-skill ul + ul { margin-top: 12px; } .ds-legacy li { color: var(--mint-soft, #c4f0e5); font-size: 0.9375rem; }"
+    },
+    {
+      "name": "Contact Mail Link",
+      "kind": "custom",
+      "refersTo": "typography.mail",
+      "description": "The email address at mail scale on deep teal, mint lead above.",
+      "html": "<div class=\"ds-contact\"><p class=\"ds-lead\">U kan mij bereiken op volgend e-mail adres:</p><a class=\"ds-mail\" href=\"#\">info@seanstove.be</a></div>",
+      "css": ".ds-contact { background: var(--teal-deep, #0a5a4b); padding: 40px clamp(16px, 5vw, 64px); font-family: Lato, 'Segoe UI', system-ui, sans-serif; } .ds-lead { margin: 0; color: var(--mint, #dff7f1); font-size: 1.0625rem; line-height: 1.7; } .ds-mail { display: inline-block; margin-top: 6px; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 900; color: var(--white, #ffffff); text-decoration-thickness: 2px; text-underline-offset: 0.18em; overflow-wrap: anywhere; } .ds-mail:hover { color: var(--mint, #dff7f1); } .ds-mail:focus-visible { outline: 2px solid var(--white, #ffffff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Colophon Strip",
+      "kind": "custom",
+      "refersTo": "colophon",
+      "description": "Deep teal footer strip with a mint hairline, small soft-mint text.",
+      "html": "<footer class=\"ds-colophon\"><span>Sean Stove Comm. V. · BTW BE0661846737</span><a href=\"#\">Naar boven</a></footer>",
+      "css": ".ds-colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px clamp(16px, 5vw, 64px); background: var(--teal-deep, #0a5a4b); border-top: 1px solid rgba(223, 247, 241, 0.35); color: var(--mint-soft, #c4f0e5); font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: 0.8125rem; } .ds-colophon a { color: var(--mint-soft, #c4f0e5); text-underline-offset: 0.2em; } .ds-colophon a:hover { color: var(--white, #ffffff); } .ds-colophon a:focus-visible { outline: 2px solid var(--white, #ffffff); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Origineel, vernieuwd",
+    "overview": "The 2015 seanstove.be, rebuilt properly. The page is a run of flat fields, white, teal and deep teal, separated by straight diagonal cuts. The cuts are drawn in code with `clip-path` and each one carries a thin light-teal line running parallel to it, 16px off the edge. Sean's own portrait appears twice as teal duotone crops: the lower face behind the hero type, and a half-face crop (the left half of the face as seen) beside the contact block, cut off by the page's right edge as in the 2015 original, its background and cheek side dissolving into deep teal. Lato speaks in the original's voice: heavy uppercase display, light tracked uppercase sublines, bold tracked caps for labels and buttons, plain regular body.\n\nDensity is low and the page is one long scroll. Text columns are narrow and offset, alternating left, right, left across Over, Skills and Contact, so the reader zigzags down the page the way the cuts do. There are no cards, no shadows and no rounded corners. Depth comes only from the cuts, the overlaps between sections, and a soft scrim behind the hero type. Motion is a single signature: on load the hero's bottom edge sweeps from flat into its diagonal while the line draws along it. After that, each further line draws once as it scrolls into view.\n\nThis world deliberately replaces the earlier \"profile sheet\" direction (ruled ink on white, Schibsted Grotesk). That direction was rejected, and nothing from it carries over.",
+    "keyCharacteristics": [
+      "Flat teal and white fields joined by straight diagonal cuts, never curves.",
+      "One light-teal 3px line parallel to every cut, offset 16px.",
+      "Teal duotone crops of Sean's own portrait, with the color baked into the raster.",
+      "Lato in four roles: 900 display, 300 tracked subline, 700 tracked caps, 400 body.",
+      "Square outline buttons, white on teal and teal on white.",
+      "Motion is limited to the cut sweep, the line draws and one staggered type rise."
+    ],
+    "rules": [
+      { "name": "The Line-Only Rule", "body": "Light teal (#17ba9d) is used only for the diagonal line and the photo highlights. Once it fills a surface or colors text, the line stops being special.", "section": "colors" },
+      { "name": "The Baked Duotone Rule", "body": "The duotone lives in the raster and is never produced with CSS `filter`, `mix-blend-mode` or overlay tints. A new photo gets a new crop baked from the source portrait with one of the two ramps, and its recipe goes in a `.json` sidecar.", "section": "colors" },
+      { "name": "The Two Fields Rule", "body": "Every surface is white, teal or deep teal, with no grays and no tinted panels. Ink is a text color only.", "section": "colors" },
+      { "name": "The Original Voice Rule", "body": "Each weight has one job: 900 for shouted caps, 300 for tracked sublines, 700 for tracked labels, 400 for reading. Uppercase belongs to display, headlines, sublines, titles and labels, and never to body prose.", "section": "typography" },
+      { "name": "The Parallel Line Rule", "body": "Every diagonal cut gets exactly one light-teal line parallel to it, 3px wide with `vector-effect: non-scaling-stroke`, 16px off the cut. A cut without its line, or a line without a cut, is off-system.", "section": "layout" },
+      { "name": "The Straight Cut Rule", "body": "Section boundaries are straight diagonals drawn with `clip-path` and sized by the cut token. No curves, no waves, and no baked shape images.", "section": "layout" },
+      { "name": "The Flat Field Rule", "body": "Fields never cast shadows. If something needs separation, use a cut, a color change or the colophon's 1px rule. A scrim is allowed only where type sits on a photo, and only as large as the type block.", "section": "elevation" },
+      { "name": "The Square Corner Rule", "body": "Radius is 0 everywhere. A rounded corner reads as a template and breaks the cut geometry.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do separate sections with straight diagonal cuts sized by the cut token, and give every cut its parallel light-teal line 16px off.",
+      "Do make the hero fall from left to right, and make the following cuts rise to the right.",
+      "Do bake any new portrait crop from `img/profile.JPG` with one of the two duotone ramps (the darker hero ramp wherever white type sits on it), and record its recipe in a `.json` sidecar.",
+      "Do keep Lato to its four roles: 900 uppercase display and headlines, 300 tracked uppercase subline, 700 tracked caps labels, 400 body.",
+      "Do use square outline buttons: white on teal, teal on white, filling on hover.",
+      "Do keep text columns narrow (560 to 640px) and offset, alternating sides down the page.",
+      "Do keep a teal field's secondary text in mint and its most muted text in soft mint.",
+      "Do make every animation end in a final state that is already correct without JavaScript, with the [0.16, 1, 0.3, 1] ease and no repeat."
+    ],
+    "donts": [
+      "Don't use light teal (#17ba9d) as a fill, text or button color. It is the line and the photo highlights only.",
+      "Don't tint photos with CSS filters, blend modes or color overlays. Only the radial type scrim may darken a photo.",
+      "Don't add shadows, rounded corners or cards.",
+      "Don't draw curved or wavy section edges, or bake cut shapes into images.",
+      "Don't introduce grays or a second hue. Surfaces are white, teal or deep teal.",
+      "Don't replace the six original skill glyphs with a stock icon set, or mix in icons of a different weight.",
+      "Don't loop or re-trigger the line draws. Each line draws once."
+    ]
+  }
+}

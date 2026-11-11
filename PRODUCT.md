@@ -30,9 +30,9 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 
 ## Capabilities and Constraints
 
-- Static one-page site (`index.html`, inline CSS, `css/style.css`, self-hosted Lato fonts, `img/`) served by **GitHub Pages** on the custom domain `seanstove.be` (`CNAME`). Jekyll is configured (`jekyll-theme-cayman`) but doesn't process `index.html`, which has no front matter.
+- Static one-page site (`index.html` with inline CSS, `js/main.js`, self-hosted Lato fonts in `fonts/`, `img/`) served by **GitHub Pages** on the custom domain `seanstove.be` (`CNAME`). Jekyll is configured (`jekyll-theme-cayman`) but doesn't process `index.html`, which has no front matter.
 - Analytics: Plausible (`data-domain="seanstove.be"`). Keep it privacy-friendly, with no cookie banner.
-- Dependencies today: jQuery 1.11.3 from cdnjs for smooth scrolling only.
+- Dependencies: no CDN scripts besides Plausible; motion.dev (motion@14.6.0 mini, ~5 KB gz) is self-hosted in `js/motion-mini.js`. Keep the page fast: one HTML request with inline CSS, WebP photos, preloaded fonts.
 - **Language: Dutch only** (`lang="nl"`). The copy addresses the visitor formally as "u".
 - **Stack (confirmed 2026-11-11):** the core is still **.NET**, kept current on the latest versions. Version-pinned labels like "ASP.NET 4.0" are out of date. On the frontend: **React, Angular, Svelte** and **Tailwind**, plus the modern frontend tooling in general. **Umbraco is no longer offered**; don't mention it.
 - **Experience (confirmed 2026-11-11):** **20 years**.
@@ -42,13 +42,16 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 - **Azure (confirmed 2026-11-11):** App Service, Functions, Azure SQL, Service Bus, Key Vault, Entra ID / OpenID Connect, GitHub Actions, Bicep / Terraform, Application Insights, OpenTelemetry.
 - **AI (confirmed 2026-11-11):** Azure OpenAI, Semantic Kernel, Microsoft.Extensions.AI, used to integrate AI into applications. Sean also writes software with AI coding tools such as Claude; mention it plainly, without hype.
 - **Legacy, listed last:** WCF / ADO.NET, jQuery, XML / XSLT, Octopus Deploy, IIS. Keep them below the modern items; they show breadth, not focus.
-- **Open — availability:** whether to show current availability (and how) hasn't been decided.
+- **Availability:** no date shown (decided 2026-11-11).
 
 ## Brand Commitments
 
 - Name and legal entity: **Sean Stove**, trading as **Sean Stove Comm. V.**
-- Fixed company details (confirmed correct, show them verbatim): Odiel Spruyttestraat 2, 8870 Izegem, West-Vlaanderen · BTW: BE0661846737 · info@seanstove.be
+- Fixed company details (confirmed correct, show them verbatim): Odiel Spruyttestraat 2, 8870 Izegem · BTW: BE0661846737 · info@seanstove.be
 - Existing assets: logo (`img/logo.jpg`), favicons and tile icons, photos (`img/header.jpg`, `img/skills.jpg`, `img/contact.jpg`).
+- **Binding (confirmed 2026-11-11):** the **teal green** (`#0e715f` / `#17ba9d` family) and the **folded "S" monogram** (`img/logo.jpg`) are Sean's identity; a redesign builds on both.
+- **Portrait:** Sean's face is part of the identity. The current JPGs have the teal tint and diagonal shapes baked in; Sean will supply an unedited portrait so the design controls color and crop.
+- **No availability date** on the site; availability is stated only as "beschikbaar voor freelance opdrachten".
 - Voice: personal, direct and professional Dutch. First person ("ik"), formal "u" towards the visitor.
 
 ## Evidence on Hand
