@@ -36,8 +36,9 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 - **Language: Dutch only** (`lang="nl"`). The copy addresses the visitor formally as "u".
 - **Stack (confirmed 2026-11-11):** the core is still **.NET**, kept current on the latest versions. Version-pinned labels like "ASP.NET 4.0" are out of date. On the frontend: **React, Angular, Svelte** and **Tailwind**, plus the modern frontend tooling in general. **Umbraco is no longer offered**; don't mention it.
 - **Experience (confirmed 2026-11-11):** **20 years**.
+- **.NET web (confirmed 2026-11-11):** **ASP.NET MVC**, **WebAPI** and **Blazor**, with no version-pinned labels like "ASP.NET 4.0".
 - **Cloud and ALM (confirmed 2026-11-11):** **Azure** and **Azure DevOps** (CI/CD pipelines, hosting and deployment). They back up the full-lifecycle positioning. Azure DevOps replaces "TFS" on the site.
-- **Open — rest of the tool list:** whether to keep the remaining older items (WCF, NServiceBus, Octopus Deploy, IIS, jQuery, ASP.NET 4.0 labels, …) hasn't been confirmed. Don't add specific tools beyond the confirmed ones without Sean's approval.
+- **Open — rest of the tool list:** whether to keep the remaining older items (WCF, NServiceBus, Octopus Deploy, IIS, jQuery, …) hasn't been confirmed. Don't add specific tools beyond the confirmed ones without Sean's approval.
 - **Open — availability:** whether to show current availability (and how) hasn't been decided.
 
 ## Brand Commitments
