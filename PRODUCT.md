@@ -40,7 +40,7 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 - **Cloud and ALM (confirmed 2026-11-11):** **Azure** and **Azure DevOps** (CI/CD pipelines, hosting and deployment). They back up the full-lifecycle positioning. Azure DevOps replaces "TFS" on the site.
 - **Modern .NET (confirmed 2026-11-11):** ASP.NET (MVC / WebAPI, Minimal APIs), Blazor, Entity Framework, SignalR, gRPC, .NET Aspire, MassTransit / RabbitMQ, xUnit / Playwright. TypeScript next to JavaScript.
 - **Azure (confirmed 2026-11-11):** App Service, Functions, Azure SQL, Service Bus, Key Vault, Entra ID / OpenID Connect, GitHub Actions, Bicep / Terraform, Application Insights, OpenTelemetry.
-- **AI (confirmed 2026-11-11):** Azure OpenAI, Semantic Kernel, Microsoft.Extensions.AI, used to integrate AI into applications.
+- **AI (confirmed 2026-11-11):** Azure OpenAI, Semantic Kernel, Microsoft.Extensions.AI, used to integrate AI into applications. Sean also writes software with AI coding tools such as Claude; mention it plainly, without hype.
 - **Legacy, listed last:** WCF / ADO.NET, jQuery, XML / XSLT, Octopus Deploy, IIS. Keep them below the modern items; they show breadth, not focus.
 - **Open — availability:** whether to show current availability (and how) hasn't been decided.
 
