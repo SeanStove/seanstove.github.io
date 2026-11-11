@@ -36,12 +36,12 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 - **Language: Dutch only** (`lang="nl"`). The copy addresses the visitor formally as "u".
 - **Stack (confirmed 2026-11-11):** the core is still **.NET**, kept current on the latest versions. Version-pinned labels like "ASP.NET 4.0" are out of date. On the frontend: **React, Angular, Svelte** and **Tailwind**, plus the modern frontend tooling in general. **Umbraco is no longer offered**; don't mention it.
 - **Experience (confirmed 2026-11-11):** **20 years**.
-- **.NET web (confirmed 2026-11-11):** **ASP.NET MVC**, **WebAPI** and **Blazor**, with no version-pinned labels like "ASP.NET 4.0".
+- **.NET web (confirmed 2026-11-11):** **ASP.NET MVC**, **WebAPI** and **Blazor**, with no version-pinned labels like "ASP.NET 4.0". **Don't distinguish "Core" from classic**: write "ASP.NET" and "Entity Framework", never "ASP.NET Core" / "EF Core" as separate items.
 - **Cloud and ALM (confirmed 2026-11-11):** **Azure** and **Azure DevOps** (CI/CD pipelines, hosting and deployment). They back up the full-lifecycle positioning. Azure DevOps replaces "TFS" on the site.
-- **Modern .NET (confirmed 2026-11-11):** ASP.NET Core (MVC / WebAPI, Minimal APIs), Blazor, EF Core, SignalR, gRPC, .NET Aspire, MassTransit / RabbitMQ, xUnit / Playwright. TypeScript next to JavaScript.
+- **Modern .NET (confirmed 2026-11-11):** ASP.NET (MVC / WebAPI, Minimal APIs), Blazor, Entity Framework, SignalR, gRPC, .NET Aspire, MassTransit / RabbitMQ, xUnit / Playwright. TypeScript next to JavaScript.
 - **Azure (confirmed 2026-11-11):** App Service, Functions, Azure SQL, Service Bus, Key Vault, Entra ID / OpenID Connect, GitHub Actions, Bicep / Terraform, Application Insights, OpenTelemetry.
 - **AI (confirmed 2026-11-11):** Azure OpenAI, Semantic Kernel, Microsoft.Extensions.AI, used to integrate AI into applications.
-- **Legacy, listed last:** ASP.NET MVC (classic) / WCF, ADO.NET / EF, jQuery, XML / XSLT, Octopus Deploy, IIS. Keep them below the modern items; they show breadth, not focus.
+- **Legacy, listed last:** WCF / ADO.NET, jQuery, XML / XSLT, Octopus Deploy, IIS. Keep them below the modern items; they show breadth, not focus.
 - **Open — availability:** whether to show current availability (and how) hasn't been decided.
 
 ## Brand Commitments
