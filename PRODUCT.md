@@ -38,7 +38,10 @@ Success: a visitor quickly understands who Sean is, what Sean covers, that Sean 
 - **Experience (confirmed 2026-11-11):** **20 years**.
 - **.NET web (confirmed 2026-11-11):** **ASP.NET MVC**, **WebAPI** and **Blazor**, with no version-pinned labels like "ASP.NET 4.0".
 - **Cloud and ALM (confirmed 2026-11-11):** **Azure** and **Azure DevOps** (CI/CD pipelines, hosting and deployment). They back up the full-lifecycle positioning. Azure DevOps replaces "TFS" on the site.
-- **Open — rest of the tool list:** whether to keep the remaining older items (WCF, NServiceBus, Octopus Deploy, IIS, jQuery, …) hasn't been confirmed. Don't add specific tools beyond the confirmed ones without Sean's approval.
+- **Modern .NET (confirmed 2026-11-11):** ASP.NET Core (MVC / WebAPI, Minimal APIs), Blazor, EF Core, SignalR, gRPC, .NET Aspire, MassTransit / RabbitMQ, xUnit / Playwright. TypeScript next to JavaScript.
+- **Azure (confirmed 2026-11-11):** App Service, Functions, Azure SQL, Service Bus, Key Vault, Entra ID / OpenID Connect, GitHub Actions, Bicep / Terraform, Application Insights, OpenTelemetry.
+- **AI (confirmed 2026-11-11):** Azure OpenAI, Semantic Kernel, Microsoft.Extensions.AI, used to integrate AI into applications.
+- **Legacy, listed last:** ASP.NET MVC (classic) / WCF, ADO.NET / EF, jQuery, XML / XSLT, Octopus Deploy, IIS. Keep them below the modern items; they show breadth, not focus.
 - **Open — availability:** whether to show current availability (and how) hasn't been decided.
 
 ## Brand Commitments
