@@ -402,10 +402,9 @@
       }
 
       .skills-intro {
-        max-width: 620px;
-        margin-left: auto;
-        margin-right: max(var(--gutter), 18vw);
-        text-align: right;
+        max-width: 640px;
+        margin-left: max(var(--gutter), 18vw);
+        margin-right: var(--gutter);
       }
 
       .skills-intro p + p {
@@ -420,7 +419,6 @@
       .core {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-end;
         gap: 0.05em 0;
         margin: 0.35em 0 0.9em;
         font-size: clamp(1.75rem, 4.2vw, 3.5rem);
@@ -430,26 +428,26 @@
         letter-spacing: 0.01em;
       }
 
-      /* Each item carries its slash on its trailing side; the slash at a line's end
-         falls outside the clipped intro block, so no line starts or ends on one. */
+      /* Each item carries its slash on its leading side; the slash before a line's
+         first item falls outside the clipped intro block, so no line starts on one. */
       .skills-intro {
         overflow: clip;
       }
 
       .core {
-        margin-right: -0.9em;
+        margin-left: -0.9em;
       }
 
       .core li {
         position: relative;
-        padding-right: 0.9em;
+        padding-left: 0.9em;
       }
 
       .core li::after {
         content: "/";
         position: absolute;
         top: 0;
-        right: 0;
+        left: 0;
         width: 0.9em;
         text-align: center;
         font-weight: 300;
@@ -522,6 +520,10 @@
 
       .index-row.legacy li,
       .index-row.legacy dt {
+        color: var(--mint-soft);
+      }
+
+      .index-row.legacy .icon {
         color: var(--mint-soft);
       }
 
@@ -606,6 +608,8 @@
       .colophon {
         position: relative;
         padding-block: 20px;
+        margin-left: max(var(--gutter), 18vw);
+        margin-right: var(--gutter);
         font-size: 0.8125rem;
         color: var(--mint-soft);
         display: flex;
@@ -684,26 +688,14 @@
           margin-top: 8px;
         }
 
-        .skills-intro {
-          text-align: left;
+        /* One margin for every text column on phones. */
+        .over-inner,
+        .skills-intro,
+        .index,
+        .contact-body,
+        .colophon {
           margin-left: var(--gutter);
           margin-right: var(--gutter);
-        }
-
-        .core {
-          justify-content: flex-start;
-          margin-right: 0;
-          margin-left: -0.9em;
-        }
-
-        .core li {
-          padding-right: 0;
-          padding-left: 0.9em;
-        }
-
-        .core li::after {
-          right: auto;
-          left: 0;
         }
 
         .index-row {
@@ -825,7 +817,6 @@
             <ul class="core" aria-label="Kernexpertise" data-reveal>
               <li>.NET</li>
               <li>Azure</li>
-              <li>Blazor</li>
               <li>React</li>
               <li>AI</li>
             </ul>
@@ -858,7 +849,7 @@
               <dd><ul><li>ASP.NET MVC / WebAPI</li><li>Minimal APIs</li><li>Blazor</li><li>Entity Framework</li><li>SignalR</li><li>gRPC</li><li>.NET Aspire</li><li>React</li><li>Angular</li><li>Svelte</li><li>Tailwind</li><li>Bootstrap</li></ul></dd>
             </div>
             <div class="index-row">
-              <dt><svg class="icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path transform="translate(256 256) scale(0.86) translate(-256 -256)" fill="none" stroke="currentColor" stroke-width="46" stroke-linejoin="round" d="M400 240c-8.89-89.54-71-144-144-144-69 0-113.44 48.2-128 96-60 6-112 43.59-112 112 0 66 54 112 120 112h260c55 0 100-27.44 100-88 0-59.82-53-85.76-96-88z"/></svg><span>Azure</span></dt>
+              <dt><svg class="icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path transform="translate(256 256) scale(0.86) translate(-256 -256)" fill="none" stroke="currentColor" stroke-width="46" stroke-linejoin="round" stroke-linecap="round" d="M400 240c-8.89-89.54-71-144-144-144-69 0-113.44 48.2-128 96-60 6-112 43.59-112 112 0 66 54 112 120 112h260c55 0 100-27.44 100-88 0-59.82-53-85.76-96-88z"/></svg><span>Azure</span></dt>
               <dd><ul><li>App Service</li><li>Functions</li><li>Azure SQL</li><li>Service Bus</li><li>Key Vault</li><li>Entra ID / OpenID Connect</li><li>Azure DevOps</li><li>GitHub Actions</li><li>Bicep</li><li>Terraform</li><li>Application Insights</li><li>OpenTelemetry</li></ul></dd>
             </div>
             <div class="index-row">
@@ -874,7 +865,7 @@
               <dd><ul><li>MSSQL Server</li><li>MassTransit</li><li>RabbitMQ</li><li>NServiceBus</li><li>xUnit</li><li>Playwright</li><li>Octopus Deploy</li><li>IIS</li></ul></dd>
             </div>
             <div class="index-row legacy">
-              <dt><span class="icon" aria-hidden="true"></span><span>Ook</span></dt>
+              <dt><svg class="icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="34" stroke-linejoin="round" stroke-linecap="round" d="M92 256A164 164 0 1 0 140 140 M140 72V140H208 M256 164V256L322 300"/></svg><span>Ook</span></dt>
               <dd><ul><li>WCF</li><li>ADO.NET</li><li>jQuery</li><li>XML / XSLT</li></ul></dd>
             </div>
           </dl>
@@ -909,7 +900,7 @@
         </section>
       </div>
       <footer class="colophon-strip on-teal">
-        <div class="colophon wrap">
+        <div class="colophon">
           <span>Sean Stove Comm. V. · BTW BE0661846737</span>
         </div>
       </footer>

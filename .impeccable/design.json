@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-15T12:00:00.000Z",
+  "generatedAt": "2026-11-15T13:00:00.000Z",
   "title": "Design System: Sean Stove",
   "extensions": {
     "colorMeta": {
@@ -129,7 +129,7 @@
       },
       "core": {
         "displayName": "Core",
-        "purpose": "The core stack under EXPERTISE (.NET / AZURE / BLAZOR / REACT / AI); 900 uppercase, right-aligned, light-teal 300-weight slash separators."
+        "purpose": "The core stack under EXPERTISE (.NET / AZURE / REACT / AI); 900 uppercase, left-aligned, light-teal 300-weight slash separators on each item's leading side."
       },
       "body": {
         "displayName": "Body",
@@ -260,8 +260,8 @@
     "separators": [
       {
         "name": "core-slash",
-        "value": "'/' in weight 300, color #17ba9d, 0.9em slot on the item's trailing side (leading side at 640px and below)",
-        "purpose": "Core stack separator; line-end slashes clipped by overflow: clip on the intro and a -0.9em margin on the stack."
+        "value": "'/' in weight 300, color #17ba9d, 0.9em slot on the item's leading side, at every width",
+        "purpose": "Core stack separator; the slash before a line's first item is clipped by overflow: clip on the intro and a -0.9em left margin on the stack."
       },
       {
         "name": "index-dot",
@@ -312,9 +312,9 @@
       "name": "Core Stack",
       "kind": "custom",
       "refersTo": "typography.core",
-      "description": "The core expertise stack under the EXPERTISE heading: white 900 caps, right-aligned, light-teal slashes on the trailing side, line-end slashes clipped.",
-      "html": "<div class=\"ds-band\"><div class=\"ds-intro\"><ul class=\"ds-core\"><li>.NET</li><li>Azure</li><li>Blazor</li><li>React</li><li>AI</li></ul></div></div>",
-      "css": ".ds-band { background: var(--teal, #0e715f); padding: 40px 24px; } .ds-intro { max-width: 620px; margin-left: auto; text-align: right; overflow: clip; } .ds-core { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.05em 0; margin: 0 -0.9em 0 0; padding: 0; list-style: none; color: var(--white, #ffffff); font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: clamp(1.75rem, 4.2vw, 3.5rem); font-weight: 900; line-height: 1.08; letter-spacing: 0.01em; text-transform: uppercase; } .ds-core li { position: relative; padding-right: 0.9em; } .ds-core li::after { content: '/'; position: absolute; top: 0; right: 0; width: 0.9em; text-align: center; font-weight: 300; color: var(--teal-light, #17ba9d); }"
+      "description": "The core expertise stack under the EXPERTISE heading: white 900 caps, left-aligned on the shared reading edge, light-teal slashes on each item's leading side, line-start slashes clipped.",
+      "html": "<div class=\"ds-band\"><div class=\"ds-intro\"><ul class=\"ds-core\"><li>.NET</li><li>Azure</li><li>React</li><li>AI</li></ul></div></div>",
+      "css": ".ds-band { background: var(--teal, #0e715f); padding: 40px 24px; } .ds-intro { max-width: 640px; overflow: clip; } .ds-core { display: flex; flex-wrap: wrap; gap: 0.05em 0; margin: 0 0 0 -0.9em; padding: 0; list-style: none; color: var(--white, #ffffff); font-family: Lato, 'Segoe UI', system-ui, sans-serif; font-size: clamp(1.75rem, 4.2vw, 3.5rem); font-weight: 900; line-height: 1.08; letter-spacing: 0.01em; text-transform: uppercase; } .ds-core li { position: relative; padding-left: 0.9em; } .ds-core li::after { content: '/'; position: absolute; top: 0; left: 0; width: 0.9em; text-align: center; font-weight: 300; color: var(--teal-light, #17ba9d); }"
     },
     {
       "name": "Expertise Index",
@@ -343,7 +343,7 @@
   ],
   "narrative": {
     "northStar": "Origineel, vernieuwd",
-    "overview": "The 2015 seanstove.be, rebuilt properly. The page is a run of flat fields, white, teal and deep teal, separated by straight diagonal cuts. The cuts are drawn in code with `clip-path` and each one carries a thin light-teal line running parallel to it, 16px off the edge. Sean's own portrait appears twice as teal duotone crops: the lower face behind the hero type, and a half-face crop (the left half of the face as seen) beside the contact block, cut off by the page's right edge as in the 2015 original, its background and cheek side dissolving into deep teal. Lato speaks in the original's voice: heavy uppercase display, light tracked uppercase sublines, bold tracked caps for labels and buttons, plain regular body.\n\nDensity is low and the page is one long scroll. Text columns are narrow and offset, alternating left, right, left across Over, Expertise and Contact, so the reader zigzags down the page the way the cuts do. There are no cards, no shadows and no rounded corners. Depth comes only from the cuts, the overlaps between sections, and a soft scrim behind the hero type. Motion is a single signature: on load the hero's bottom edge sweeps from flat into its diagonal while the line draws along it. After that, each further line draws once as it scrolls into view, and the Expertise stack and index rows rise in once.\n\nThis world deliberately replaces the earlier \"profile sheet\" direction (ruled ink on white, Schibsted Grotesk). That direction was rejected, and nothing from it carries over.",
+    "overview": "The 2015 seanstove.be, rebuilt properly. The page is a run of flat fields, white, teal and deep teal, separated by straight diagonal cuts. The cuts are drawn in code with `clip-path` and each one carries a thin light-teal line running parallel to it, 16px off the edge. Sean's own portrait appears twice as teal duotone crops: the lower face behind the hero type, and a half-face crop (the left half of the face as seen) beside the contact block, cut off by the page's right edge as in the 2015 original, its background and cheek side dissolving into deep teal. Lato speaks in the original's voice: heavy uppercase display, light tracked uppercase sublines, bold tracked caps for labels and buttons, plain regular body.\n\nDensity is low and the page is one long scroll. Text columns are narrow and share one left reading edge, inset from the left, across Over, Expertise and Contact. The diagonals carry the movement, so the text doesn't have to zigzag. There are no cards, no shadows and no rounded corners. Depth comes only from the cuts, the overlaps between sections, and a soft scrim behind the hero type. Motion is a single signature: on load the hero's bottom edge sweeps from flat into its diagonal while the line draws along it. After that, each further line draws once as it scrolls into view, and the Expertise stack and index rows rise in once.\n\nThis world deliberately replaces the earlier \"profile sheet\" direction (ruled ink on white, Schibsted Grotesk). That direction was rejected, and nothing from it carries over.",
     "keyCharacteristics": [
       "Flat teal and white fields joined by straight diagonal cuts, never curves.",
       "One light-teal 3px line parallel to every cut, offset 16px.",
@@ -400,7 +400,7 @@
       "Do bake any new portrait crop from `img/profile.JPG` with one of the two duotone ramps (the darker hero ramp wherever white type sits on it), and record its recipe in a `.json` sidecar.",
       "Do keep Lato to its four roles: 900 uppercase display and headlines, 300 tracked uppercase subline, 700 tracked caps labels, 400 body.",
       "Do use square outline buttons: white on teal, teal on white, filling on hover.",
-      "Do keep text columns narrow (560 to 640px) and offset, alternating sides down the page.",
+      "Do keep text columns narrow (560 to 640px) on the single left reading edge (max(gutter, 18vw)), and let the diagonals carry the movement.",
       "Do keep a teal field's secondary text in mint and its most muted text in soft mint.",
       "Do let separators (the core stack's slash, the index's middle dot) hang on one side of their item and clip at line edges, so no line starts or ends on one.",
       "Do make every animation end in a final state that is already correct without JavaScript, with the [0.16, 1, 0.3, 1] ease and no repeat."

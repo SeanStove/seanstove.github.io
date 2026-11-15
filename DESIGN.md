@@ -112,7 +112,7 @@ components:
 
 The 2015 seanstove.be, rebuilt properly. The page is a run of flat fields, white, teal and deep teal, separated by straight diagonal cuts. The cuts are drawn in code with `clip-path` and each one carries a thin light-teal line running parallel to it, 16px off the edge. Sean's own portrait appears twice as teal duotone crops: the lower face behind the hero type, and a half-face crop (the left half of the face as seen) beside the contact block, cut off by the page's right edge as in the 2015 original, its background and cheek side dissolving into deep teal. Lato speaks in the original's voice: heavy uppercase display, light tracked uppercase sublines, bold tracked caps for labels and buttons, plain regular body.
 
-Density is low and the page is one long scroll. Text columns are narrow and offset, alternating left, right, left across Over, Expertise and Contact, so the reader zigzags down the page the way the cuts do. There are no cards, no shadows and no rounded corners. Depth comes only from the cuts, the overlaps between sections, and a soft scrim behind the hero type. Motion is a single signature: on load the hero's bottom edge sweeps from flat into its diagonal while the line draws along it. After that, each further line draws once as it scrolls into view, and the Expertise stack and index rows rise in once.
+Density is low and the page is one long scroll. Text columns are narrow and share one left reading edge, inset from the left, across Over, Expertise and Contact. The diagonals carry the movement, so the text doesn't have to zigzag. There are no cards, no shadows and no rounded corners. Depth comes only from the cuts, the overlaps between sections, and a soft scrim behind the hero type. Motion is a single signature: on load the hero's bottom edge sweeps from flat into its diagonal while the line draws along it. After that, each further line draws once as it scrolls into view, and the Expertise stack and index rows rise in once.
 
 This world deliberately replaces the earlier "profile sheet" direction (ruled ink on white, Schibsted Grotesk). That direction was rejected, and nothing from it carries over.
 
@@ -166,7 +166,7 @@ A single-hue palette: one brand teal in three depths, a light teal kept for the 
 - **Headline** (900, clamp(2.25rem, 4.6vw, 4.0625rem), 1, 0.02em, uppercase): the section names OVER, EXPERTISE and CONTACT. Teal on white, white on teal.
 - **Subline** (300, clamp(1.25rem, 2.4vw, 2.0625rem), 1.3, 0.2em, tightening to 0.12em at 640px and below, uppercase, balanced wrap): the hero question under HALLO.
 - **Mail** (900, clamp(1.5rem, 3vw, 2.25rem)): the email address in Contact, white with a 2px underline.
-- **Core** (900, clamp(1.75rem, 4.2vw, 3.5rem), 1.08, 0.01em, uppercase): the core stack under the EXPERTISE heading (.NET / AZURE / BLAZOR / REACT / AI), right-aligned, white, separated by light-teal "/" in weight 300.
+- **Core** (900, clamp(1.75rem, 4.2vw, 3.5rem), 1.08, 0.01em, uppercase): the core stack under the EXPERTISE heading (.NET / AZURE / REACT / AI), left-aligned, white, separated by light-teal "/" in weight 300.
 - **Body** (400, 1.0625rem, 1.7; 1rem at 640px and below): prose in columns of 560 to 640px. Bold 700 marks key phrases only.
 - **Label** (700, 0.9375rem for buttons, 0.875rem for the nav and index labels, 1rem for the hero role line, 0.1em, uppercase): buttons, nav, index labels and the hero role line.
 - **Small** (400, 0.8125rem): the colophon.
@@ -176,11 +176,11 @@ A single-hue palette: one brand teal in three depths, a light teal kept for the 
 
 ## Layout
 
-The container is `wrap`: max 1200px, centered, with gutter padding (clamp(16px, 5vw, 64px)). Prose columns are deliberately offset instead of centered. Over sits inset from the left (max(gutter, 18vw), max 640px). The Expertise intro is right-aligned and inset from the right (max 620px). It holds the heading, the core stack and Sean's four intro paragraphs in mint, in that order. The Contact body is inset from the left again (max 560px).
+The container is `wrap`: max 1200px, centered, with gutter padding (clamp(16px, 5vw, 64px)). Prose columns are deliberately offset instead of centered. They share one left reading edge, inset from the left by max(gutter, 18vw), with the gutter on the right. Over is max 640px wide. The Expertise intro is also max 640px and holds the heading, the core stack and Sean's four intro paragraphs in mint, in that order, all left-aligned. The Contact body is max 560px. The 2015 layout alternated text left and right; that alternation is retired, and the diagonal cuts carry the movement instead.
 
 **The Expertise index** sits below the intro, clamp(56px, 7vw, 96px) down, with inline margins of max(gutter, 18vw) so it aligns with the text columns. It is a ruled list with one row per area: Languages, Frameworks, Azure, AI, Practices and Tools, then "Ook" for legacy items. Each row is a two-column grid, a 13rem label column and the items, with a 32px column gap and 20px vertical padding.
 
-**Separators never start or end a line.** Both the core stack's "/" and the index's middle dot follow this. Each slash hangs on its item's trailing side, and the slash at a line's end is clipped (the intro clips its overflow, and the stack is pulled 0.9em past its edge). Each dot hangs on its item's leading side, and the dot at a line's start is clipped the same way (the items box clips its overflow, and the list is pulled 1.3em past its edge). At 640px and below, the stack left-aligns and the slash moves to the leading side, clipped the same way.
+**Separators never start or end a line.** Both the core stack's "/" and the index's middle dot follow this. Both hang on their item's leading side, in a fixed slot (0.9em for the slash, 1.3em for the dot). The separator before a line's first item is clipped: the containing box clips its overflow (the intro for the stack, the items box for the index), and the list is pulled one slot past the box's left edge (-0.9em and -1.3em). This holds at every width.
 
 **The cut system.** The cut height (cut, clamp(56px, 10vw, 180px)) sets the depth of every diagonal and drives the section padding and overlaps.
 - **Hero to Over:** the bottom edge falls from left to right, `polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - cut))`. Over pulls up by 0.35 × cut into the white wedge.
@@ -191,7 +191,7 @@ The hero is clamp(520px, 50vw, 760px) tall and centers its type stack. The top b
 
 **Breakpoints:**
 - **760px:** the contact photo leaves its right half, stacks below the text at 320px tall, and its mask fade turns vertical.
-- **640px:** body drops to 1rem, the bar to 68px and the monogram to 32px. The nav shrinks to 0.8125rem with 0.06em tracking, the hero subline to 0.12em, and Over's overlap to 8px. The Expertise intro becomes left-aligned with full gutters on both sides, the core stack left-aligns with its slash on the leading side, and each index row stacks its label above its items.
+- **640px:** body drops to 1rem, the bar to 68px and the monogram to 32px. The nav shrinks to 0.8125rem with 0.06em tracking, the hero subline to 0.12em, and Over's overlap to 8px. Every text column (Over, the Expertise intro and index, Contact and the colophon) moves to the same gutter on both sides, so the page keeps one left edge on phones too, and each index row stacks its label above its items.
 - **Print:** the bar, skip link, chevron, edge lines and buttons are hidden. Clip-paths are removed, rise and reveal targets are forced visible, and colors print exactly.
 
 ### Named Rules
@@ -210,7 +210,7 @@ The system is flat. There are no box-shadows anywhere. Depth comes from three so
 
 Every corner is square (0px): buttons, fields, photos and the skip link. The recurring silhouette is the trapezoid made by a diagonal cut. The only other strokes are the 2px outline on buttons, the 1px mint rules of the Expertise index (rgba(223,247,241,0.28) on top of each row, plus the bottom of the last), the 1px mint rule at 35% opacity above the colophon, and the hero chevron, a wide open V drawn with a 1.5 stroke (64 × 32px).
 
-**The area glyphs** are the six original icons, redrawn as inline SVG on a 512 grid. They now appear at 28px in white as row markers in the Expertise index: speech bubble for Languages, framed picture for Frameworks, cloud for Azure, chip for AI, star badge for Practices, and tools for Tools. The "Ook" row keeps an empty 28px slot so its label lines up. Five are filled shapes with evenodd holes that read as outlines. The Azure cloud is a 46-unit stroke scaled to match their weight. Together they form one outline-weight family. A new icon must match this weight, not come from a generic icon set.
+**The area glyphs** are the six original icons, redrawn as inline SVG on a 512 grid. They now appear at 28px in white as row markers in the Expertise index: speech bubble for Languages, framed picture for Frameworks, cloud for Azure, chip for AI, star badge for Practices, and tools for Tools. The "Ook" row uses a history mark (a clock with a counter-clockwise arrow, for earlier experience), drawn as a 34-unit round-capped stroke and tinted soft mint like the rest of that row. Five are filled shapes with evenodd holes that read as outlines. The Azure cloud is a 46-unit stroke scaled to match their weight. Together they form one outline-weight family. A new icon must match this weight, not come from a generic icon set.
 
 ### Named Rules
 **The Square Corner Rule.** Radius is 0 everywhere. A rounded corner reads as a template and breaks the cut geometry.
@@ -238,10 +238,10 @@ Teal with a 1px underline offset 0.2em, thickening to 2px on hover. On teal fiel
 Teal field behind a full-bleed duotone crop (object-position 50% 30%) with the scrim behind the type. Top to bottom: HALLO (display), the subline question, the role line (label, mint), the white outline button, then the chevron.
 
 ### Expertise index
-A ruled list, not cards or columns. Each row has 1px hairlines in rgba(223,247,241,0.28): one on top of every row and one under the last. The label cell holds the 28px white glyph and the area name in 700 tracked mint caps at 0.875rem, 14px apart. The items run inline in white at body size (line-height 1.7), separated by soft-mint middle dots, and wrap freely. The last row, "Ook" (WCF, ADO.NET, jQuery, XML / XSLT), sets both its label and items in soft mint. At 640px and below, the label sits above the items.
+A ruled list, not cards or columns. Each row has 1px hairlines in rgba(223,247,241,0.28): one on top of every row and one under the last. The label cell holds the 28px white glyph and the area name in 700 tracked mint caps at 0.875rem, 14px apart. The items run inline in white at body size (line-height 1.7), separated by soft-mint middle dots, and wrap freely. The last row, "Ook" (WCF, ADO.NET, jQuery, XML / XSLT), sets its glyph, label and items in soft mint. At 640px and below, the label sits above the items.
 
 ### Core stack
-The headline list under EXPERTISE, at the core size in white, right-aligned and wrapping, with light-teal 300-weight "/" separators that echo the diagonal. Line-end slashes are clipped, as described under Layout.
+The headline list under EXPERTISE, at the core size in white, left-aligned and wrapping, with light-teal 300-weight "/" separators that echo the diagonal. Each slash sits on its item's leading side, and the slash before a line's first item is clipped, as described under Layout.
 
 ### Contact
 Deep teal field with the half-face crop filling its right half (object-position 100% 30%). The face is anchored to the image's right edge and cut off by the page edge, like the 2015 original. The 18% left mask fade dissolves the background and cheek side into deep teal toward the text, so the face reads as emerging from the field rather than as a framed photo. Then come the lead in mint, the email address at mail scale, the company address in mint, and the white outline button.
@@ -265,7 +265,7 @@ The ease for everything is [0.16, 1, 0.3, 1], also used as the CSS transition cu
 - **Do** bake any new portrait crop from `img/profile.JPG` with one of the two duotone ramps (the darker hero ramp wherever white type sits on it), and record its recipe in a `.json` sidecar.
 - **Do** keep Lato to its four roles: 900 uppercase display and headlines, 300 tracked uppercase subline, 700 tracked caps labels, 400 body.
 - **Do** use square outline buttons: white on teal, teal on white, filling on hover.
-- **Do** keep text columns narrow (560 to 640px) and offset, alternating sides down the page.
+- **Do** keep text columns narrow (560 to 640px) on the single left reading edge (max(gutter, 18vw)), and let the diagonals carry the movement.
 - **Do** keep a teal field's secondary text in mint and its most muted text in soft mint.
 - **Do** let separators (the core stack's slash, the index's middle dot) hang on one side of their item and clip at line edges, so no line starts or ends on one.
 - **Do** make every animation end in a final state that is already correct without JavaScript, with the [0.16, 1, 0.3, 1] ease and no repeat.
