@@ -22,6 +22,7 @@ if (root.classList.contains("motion")) {
   // Pin the start state inline, then hand control to motion.
   hero.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)";
   rise.forEach((el) => (el.style.opacity = "0"));
+  document.querySelectorAll("[data-reveal] > *").forEach((el) => (el.style.opacity = "0"));
   [heroLine, ...edges].forEach((svg) => (svg.style.clipPath = "inset(0px 100% 0px 0px)"));
   root.classList.remove("motion");
 
@@ -59,4 +60,24 @@ if (root.classList.contains("motion")) {
     { rootMargin: "0px 0px -15% 0px" }
   );
   edges.forEach((svg) => io.observe(svg));
+
+  // Expertise: the core stack and the index rows rise in once, in reading order.
+  const groups = document.querySelectorAll("[data-reveal]");
+  const reveal = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        reveal.unobserve(entry.target);
+        [...entry.target.children].forEach((el, i) => {
+          animate(
+            el,
+            { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0)"] },
+            { duration: 0.6, delay: i * 0.06, ease }
+          ).then(() => (el.style.transform = ""));
+        });
+      });
+    },
+    { rootMargin: "0px 0px -10% 0px" }
+  );
+  groups.forEach((g) => reveal.observe(g));
 }

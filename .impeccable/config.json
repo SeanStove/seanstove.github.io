@@ -41,6 +41,15 @@
         ],
         "createdAt": "2026-11-11T19:39:16.243Z",
         "reason": "agent verified: nav size 0.875rem is documented in DESIGN.md Typography (Label) and Components (Links)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1rem",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-15T16:46:24.031Z",
+        "reason": "agent verified: 1rem is the hero role line and the <=640 body size, both documented in DESIGN.md Typography"
       }
     ]
   }
